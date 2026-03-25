@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: book-service
+
+resources:
+  - namespace.yaml
+  - sa.yaml
+  - registry-secret.yaml
+  - configmap.yaml
+  - secret.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+  - pdb.yaml
+
+commonLabels:
+  app.kubernetes.io/name:       book-microservice
+  app.kubernetes.io/managed-by: kustomize

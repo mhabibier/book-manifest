@@ -1,0 +1,48 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: book-service
+
+resources:
+  - ../../base
+
+images:
+  - name: registry.yourdomain.com/book-service
+    newTag: "1.0.0"
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: book-service
+        namespace: book-service
+      spec:
+        replicas: 3
+        template:
+          spec:
+            containers:
+              - name: book-service
+                resources:
+                  requests:
+                    cpu:    "200m"
+                    memory: "256Mi"
+                  limits:
+                    cpu:    "1000m"
+                    memory: "512Mi"
+  - patch: |-
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: book-service-hpa
+        namespace: book-service
+      spec:
+        minReplicas: 3
+        maxReplicas: 20
+
+configMapGenerator:
+  - name: book-service-config
+    namespace: book-service
+    behavior: merge
+    literals:
+      - NODE_ENV=production

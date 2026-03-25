@@ -1,0 +1,132 @@
+# k8s/base/deployment.yaml
+# Deployment for book-service.
+# Self-hosted kubeadm cluster + private registry.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+  namespace: book-service
+  labels:
+    app.kubernetes.io/name:      book-microservice
+    app.kubernetes.io/component: server
+    app.kubernetes.io/version:   "1.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: book-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge:       1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app:                         book-service
+        app.kubernetes.io/name:      book-microservice
+        app.kubernetes.io/component: server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port:   "8000"
+        prometheus.io/path:   "/metrics"
+    spec:
+      serviceAccountName: book-service-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser:    1001
+        runAsGroup:   1001
+        fsGroup:      1001
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: registry-credentials
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: book-service
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: book-service
+          image: registry.yourdomain.com/book-service:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - name:          http
+              containerPort: 8000
+              protocol:      TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem:   true
+            runAsNonRoot:             true
+            runAsUser:                1001
+            capabilities:
+              drop: ["ALL"]
+          # Non-sensitive config
+          envFrom:
+            - configMapRef:
+                name: book-service-config
+          # Sensitive config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key:  DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key:  JWT_SECRET
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key:  S3_ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key:  S3_SECRET_KEY
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds:       10
+            failureThreshold:    6
+            timeoutSeconds:      3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds:   20
+            timeoutSeconds:  5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds:    10
+            timeoutSeconds:   3
+            failureThreshold: 3
+            successThreshold: 1
+          resources:
+            requests:
+              cpu:    "100m"
+              memory: "128Mi"
+            limits:
+              cpu:    "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name:      tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

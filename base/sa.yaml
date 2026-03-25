@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: book-service-sa
+  namespace: book-service
+  labels:
+    app.kubernetes.io/name:      book-microservice
+    app.kubernetes.io/component: serviceaccount
+automountServiceAccountToken: false
