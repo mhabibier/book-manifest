@@ -1,6 +1,4 @@
-# k8s/base/deployment.yaml
-# Deployment for book-service.
-# Self-hosted kubeadm cluster + private registry.
+# Deployment for Book Microservice
 
 apiVersion: apps/v1
 kind: Deployment
