@@ -17,5 +17,6 @@ data:
   S3_BUCKET:      "books"
   S3_REGION:      "us-east-1"
   S3_PUBLIC_URL:  "http://minio.yourdomain.com"
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://alloy.monitoring.svc.cluster.local:4317"
-  LOKI_HOST:                   "http://loki.monitoring.svc.cluster.local:3100"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://alloy.alloy.svc.cluster.local:4317"
+  LOKI_HOST:                   "http://loki.loki.svc.cluster.local:3100"
+  CORS_ALLOWED_ORIGINS: "http://localhost,http://localhost:80,http://localhost:8081"
