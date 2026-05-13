@@ -1,0 +1,6 @@
+projectKey=book-service
+serverUrl=https://sonar.sxdentrypoint.my.id
+serverVersion=10.3.0.82913
+dashboardUrl=https://sonar.sxdentrypoint.my.id/dashboard?id=book-service
+ceTaskId=AZ4h4x618t7cQ3cge7eD
+ceTaskUrl=https://sonar.sxdentrypoint.my.id/api/ce/task?id=AZ4h4x618t7cQ3cge7eD
