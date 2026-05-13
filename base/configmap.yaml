@@ -19,4 +19,4 @@ data:
   S3_PUBLIC_URL:  "http://minio.yourdomain.com"
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://alloy.alloy.svc.cluster.local:4317"
   LOKI_HOST:                   "http://loki.loki.svc.cluster.local:3100"
-  CORS_ALLOWED_ORIGINS: "http://localhost,http://localhost:80,http://localhost:8081"
+  CORS_ALLOWED_ORIGINS: "https://dash.sxdentrypoint.my.id,https://app.sxdentrypoint.my.id"
