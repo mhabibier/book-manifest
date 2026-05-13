@@ -83,6 +83,11 @@ spec:
                 secretKeyRef:
                   name: book-service-secret
                   key:  S3_SECRET_KEY
+            - name: INTERNAL_SERVICE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key:  INTERNAL_SERVICE_SECRET
           startupProbe:
             httpGet:
               path: /health
@@ -116,6 +121,10 @@ spec:
           volumeMounts:
             - name:      tmp
               mountPath: /tmp
+            - name:      prisma-client
+              mountPath: /app/node_modules/.prisma/client
       volumes:
         - name: tmp
+          emptyDir: {}
+        - name: prisma-client
           emptyDir: {}
