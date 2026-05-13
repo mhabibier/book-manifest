@@ -44,7 +44,7 @@ spec:
         - name: harbor-secret
       containers:
         - name: book-service
-          image: harbor.sxdentrypoint.my.id/devsecops/book-svc:04c370ba
+          image: harbor.sxdentrypoint.my.id/devsecops/book-svc:92910bca
           imagePullPolicy: Always
           ports:
             - name:          http
