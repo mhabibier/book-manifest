@@ -17,6 +17,6 @@ data:
   S3_BUCKET:      "books"
   S3_REGION:      "us-east-1"
   S3_PUBLIC_URL:  "https://s3-api.sxdentrypoint.my.id"
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://alloy.alloy.svc.cluster.local:4317"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://alloy.alloy.svc.cluster.local:4318"
   LOKI_HOST:                   "http://loki.loki.svc.cluster.local:3100"
   CORS_ALLOWED_ORIGINS: "https://dash.sxdentrypoint.my.id,https://app.sxdentrypoint.my.id"
